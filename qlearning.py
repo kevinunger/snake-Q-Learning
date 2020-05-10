@@ -18,13 +18,13 @@ rewardAlive = -1
 rewardKill =  -10000
 rewardScore = 50000000
 
-alpha = 0.3
-alphaD = 1
+alpha = 0.1
+alphaD = 0.999
 #alphe --> learnRate
 #alphaD --> Zerfallsrate
 
 gamma = 0.9
-#discount factor --> jetzige rewards sind mehr wert als spätere
+#discount factor
 
 if mode == "play":
     e = 0.0001
@@ -135,6 +135,7 @@ def paramsToState(params):
 
 
     #state = xxxxxx_xxxx_xxxx_xx
+    #state contains where the food is relative to the snake, if a screen edge is near, if a body part is near and the direction the snake took
 
     state = rFP + "_" + sD + "_" + bD + "_" + direction
     return state
@@ -249,7 +250,7 @@ def onGameOver(score, moves):
     if gameCounter % 100 == 1:
         end = time()
         timeD = end - start
-        print (str(gameCounter)+ " : " + "\t" + 'score: ' +  str(np.mean(gameScores[-100:])) + "| HighScore: " + str(np.max(gameScores)) + \
+        print (str(gameCounter)+ " : " + "\t" + 'meanScore: ' +  str(np.mean(gameScores[-100:])) + "| HighScore: " + str(np.max(gameScores)) + \
               '| moves: ' + str(np.mean(moves[-100:])) + "| time for 10 games: " + str(round(timeD*10)/100))
         start = time()
 
