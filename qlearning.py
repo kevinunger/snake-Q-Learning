@@ -6,7 +6,7 @@ from time import sleep, time
 
 if sys.argv[1] == "p":
     mode = "play"
-else:
+if sys.argv[1] == "t":
     mode = "train"
 
 if mode == "play":
