@@ -10,3 +10,4 @@ python3 & pygame
 - in traing mode it runs snake_headless.py, which disables fps ticks and graphical output for faster training
 
 ![diagramm](diagramm.png)
+![demo](demo.gif)
