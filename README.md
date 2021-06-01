@@ -10,7 +10,7 @@ python3 & pygame
 - in traing mode it runs snake_headless.py, which disables fps ticks and graphical output for faster training
 
 - Q-Function used:
-![formula](readme_images/formula.svg)
+![formula](readme_images/formula.png)
 
 ![diagramm](readme_images/diagramm.png)
 ![demo](readme_images/demo.gif)
