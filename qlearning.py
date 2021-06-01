@@ -19,9 +19,9 @@ rewardKill =  -10000
 rewardScore = 50000000
 
 alpha = 0.1
-alphaD = 0.999
-#alphe --> learnRate
-#alphaD --> Zerfallsrate
+alphaD = 1
+#alpha --> learning rate
+#alphaD --> decay factor of the learning rate
 
 gamma = 0.9
 #discount factor
@@ -34,26 +34,24 @@ else:
     e = 0.9
     ed = 1.3
     emin = 0.0001
-#ed zerfallsrate von e
-#epsilon --> randomness
+
+#e --> randomness
+#ed --> decay factor of e
+
 
 
 try:
     with open("Q\Q.pickle", "rb") as file:
         Q = defaultdict(lambda: [0,0,0,0], pickle.load(file))
 except:
-    Q = defaultdict(lambda: [0,0,0,0])
-    #UP LEFT DOWN RIGHT
-    print("NEW Q")
+    Q = defaultdict(lambda: [0,0,0,0])  #(UP,LEFT,DOWN,RIGHT)
 
 lastMoves = ""
 def paramsToState(params):
-#{'food_pos': [150, 130], 'snake_pos': [230, 50], 'snake_body': [[230, 50], [220, 50], [210, 50]], 'score': 0, ....}
-
+    #{'food_pos': [150, 130], 'snake_pos': [230, 50], 'snake_body': [[230, 50], [220, 50], [210, 50]], 'score': 0, ....}
     global lastMoves
 
-################# relativeFoodPosition (where is the food relative to the body) ###################
-
+    ################# relativeFoodPosition (where is the food relative to the body) ###################
     relativeFoodPostion = [0,0,0,0,0,0]
         
     if (params["food_pos"][0] - params["snake_pos"][0]) > 0:        #foodRight
@@ -74,7 +72,7 @@ def paramsToState(params):
     for x in relativeFoodPostion:
         rFP += str(x)
 
-################# ScreenDanger (at the edge of the screen?) ###################
+    ################# ScreenDanger (at the edge of the screen?) ###################
 
     screenDanger = [0,0,0,0]
     if(params["screenSizeX"] - params["snake_pos"][0] == 10):                               #dangerRight
@@ -90,11 +88,11 @@ def paramsToState(params):
     for x in screenDanger:
         sD += str(x)
 
-################# Danger Body (is body reachable to bite?) ###################
+    ################# Danger Body (is body reachable to bite?) ###################
 
     snake_body = []
     skip = 0
-    for pos in params["snake_body"]:                #die ersten 4 bodyParts ingnorieren
+    for pos in params["snake_body"]:                # ignore the first 4 body parts
         if (skip > 3):
              snake_body.append(pos)
         skip+=1
@@ -165,7 +163,7 @@ def emulate(params):
         index = 3
     
 
-    #reward more negative, when taking many moves to score; reset, when food is eaten
+    #reward more negative, when taking many moves; reset, when food is eaten
     reward = (0 -params["moveSinceScore"]) / 50
 
     prevReward[index] = (1 - alpha) * prevReward[index] + \
@@ -178,6 +176,7 @@ def emulate(params):
 
     #basedOnQ --> choice based on Q-table
     #basedOnQ == false --> random choice based on e (decreases over time with ed)
+
     if basedOnQ == False:
         choice = np.random.choice(['U','L','D','R'], p=[0.25, 0.25,0.25,0.25])
         oldAction = choice
@@ -254,13 +253,13 @@ def onGameOver(score, moves):
               '| moves: ' + str(np.mean(moves[-100:])) + "| time for 10 games: " + str(round(timeD*10)/100))
         start = time()
 
-    #print coeffients
+    #print hyperparameters
     if gameCounter % 100 == 0:
         print ("a:", alpha)
         print ("e:", e)
         print ("g:", gamma)
 
-    #decrease alpha / e over time(moves)
+    #decrease alpha / e over time (moves)
     if gameCounter % 100 == 0:
         alpha = alpha * alphaD
         if e > emin:
