@@ -9,5 +9,8 @@ python3 & pygame
 - qlearning.py runs snake.py and emulates the keypresses
 - in traing mode it runs snake_headless.py, which disables fps ticks and graphical output for faster training
 
-![diagramm](diagramm.png)
-![demo](demo.gif)
+- Q-Function used:
+![formula](readme_images/formula.svg)
+
+![diagramm](readme_images/diagramm.png)
+![demo](readme_images/demo.gif)
